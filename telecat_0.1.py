@@ -198,6 +198,16 @@ def status_text(cat):
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+@dp.message(F.text == "/users")
+async def users_command(message: Message):
+    count = db.execute(
+        "SELECT COUNT(*) FROM cats"
+    ).fetchone()[0]
+
+    await message.answer(
+    f"🐱 Cats: {count}\n"
+    f"👤 Your ID: {message.from_user.id}"
+)
 
 @dp.message(CommandStart())
 async def start(message: Message):
