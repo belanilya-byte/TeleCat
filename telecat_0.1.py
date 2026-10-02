@@ -200,6 +200,9 @@ dp = Dispatcher()
 
 @dp.message(F.text == "/users")
 async def users_command(message: Message):
+    if message.from_user.id != 350922718:
+        return
+
     count = db.execute(
         "SELECT COUNT(*) FROM cats"
     ).fetchone()[0]
