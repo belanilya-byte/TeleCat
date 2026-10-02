@@ -88,7 +88,6 @@ def create_cat(user_id: int):
 def update_cat(user_id: int):
     """
     Показатели кота ухудшаются со временем.
-    Пока формулы максимально простые.
     """
 
     cat = get_cat(user_id)
@@ -97,17 +96,26 @@ def update_cat(user_id: int):
         return None
 
     last_update = datetime.fromisoformat(cat["last_update"])
-
     elapsed = now() - last_update
     hours = elapsed.total_seconds() / 3600
 
-    if hours < 0.1:
+    hunger_decay = int(hours * 5)
+    thirst_decay = int(hours * 7)
+    toilet_decay = int(hours * 4)
+    affection_decay = int(hours * 2)
+
+    if not any((
+        hunger_decay,
+        thirst_decay,
+        toilet_decay,
+        affection_decay
+    )):
         return cat
 
-    hunger = max(0, cat["hunger"] - int(hours * 5))
-    thirst = max(0, cat["thirst"] - int(hours * 7))
-    toilet = max(0, cat["toilet"] - int(hours * 4))
-    affection = max(0, cat["affection"] - int(hours * 2))
+    hunger = max(0, cat["hunger"] - hunger_decay)
+    thirst = max(0, cat["thirst"] - thirst_decay)
+    toilet = max(0, cat["toilet"] - toilet_decay)
+    affection = max(0, cat["affection"] - affection_decay)
 
     db.execute("""
         UPDATE cats
@@ -129,19 +137,6 @@ def update_cat(user_id: int):
     db.commit()
 
     return get_cat(user_id)
-
-
-def change_stat(user_id: int, stat: str, amount: int):
-    cat = update_cat(user_id)
-
-    new_value = min(100, cat[stat] + amount)
-
-    db.execute(
-        f"UPDATE cats SET {stat} = ? WHERE user_id = ?",
-        (new_value, user_id)
-    )
-
-    db.commit()
 
 
 # ============================================================
