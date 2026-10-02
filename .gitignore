@@ -1,0 +1,188 @@
+# ============================================================
+# SECRETS / ENVIRONMENT
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+secrets/
+credentials/
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ============================================================
+# DATABASES / DATABASE DUMPS
+# ============================================================
+
+# SQLite databases and runtime files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Database dumps / backups
+*.dump
+*.backup
+*.bak
+
+backups/
+exports/
+
+# IMPORTANT:
+# Do NOT ignore *.sql globally.
+# SQL migrations and schema files belong in Git.
+# Production database dumps do NOT.
+
+# ============================================================
+# PYTHON
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing / linting / typing / coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Packaging / generated metadata
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ============================================================
+# JAVASCRIPT / TYPESCRIPT / MINI APP
+# ============================================================
+
+node_modules/
+
+# Package-manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Package-manager caches
+.npm/
+.yarn/cache/
+.pnpm-store/
+
+# Framework / bundler caches
+.next/
+.nuxt/
+.vite/
+.parcel-cache/
+
+# Generated frontend output
+dist/
+build/
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+# JetBrains: PyCharm / IntelliJ IDEA / WebStorm / etc.
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+
+# Vim
+*.swp
+*.swo
+*.swn
+
+# Emacs
+*~
+\#*\#
+
+# ============================================================
+# LOGS / TEMP
+# ============================================================
+
+*.log
+logs/
+
+tmp/
+temp/
+*.tmp
+
+# ============================================================
+# OS
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================
+# LOCAL CONFIG / RUNTIME
+# ============================================================
+
+*.local
+
+# ============================================================
+# BLOCKCHAIN DEVELOPMENT
+# ============================================================
+
+# Hardhat generated files
+artifacts/
+cache/
+
+# Foundry generated files
+out/
+broadcast/
+
+# Local blockchain state
+.chain-data/
+
+# Wallet / account secrets
+keystore/
+
+# IMPORTANT:
+# Smart contracts, ABIs intended for the app, deployment addresses,
+# migrations and other public blockchain data MAY belong in Git.
+# Private keys, seed phrases and wallet credentials NEVER do.
