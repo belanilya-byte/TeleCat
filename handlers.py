@@ -4,13 +4,33 @@ from aiogram import Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
-from database import (db, get_cat, create_cat, get_all_cats, update_user_info, set_language, set_onboarding_state, set_owner_name, set_cat_name)
+from database import (
+    db,
+    get_cat,
+    create_cat,
+    get_all_cats,
+    update_user_info,
+    set_language,
+    set_onboarding_state,
+    set_owner_name,
+    set_cat_name,
+    get_user,
+)
 from cat_logic import update_cat, change_stat
 from ui import cat_keyboard, status_text
 from localization import get_text
 
 
 dp = Dispatcher()
+
+
+def get_user_language(user_id: int):
+    user = get_user(user_id)
+
+    if not user or not user["language"]:
+        return "en"
+
+    return user["language"]
 
 
 @dp.message(F.text == "/users")
@@ -44,40 +64,38 @@ async def start(message: Message):
         message.from_user.language_code
     )
 
+    language = get_user_language(user_id)
+
     if is_new:
         await message.answer(
-            "🥚\n\n"
-            "*тресь*\n\n"
-            "Из яйца вылезло что-то маленькое.\n\n"
-            "Оно посмотрело на тебя.\n\n"
-            "Мяу.",
-            reply_markup=cat_keyboard()
+            get_text(language, "start_new"),
+            reply_markup=cat_keyboard(language)
         )
         return
 
     update_cat(user_id)
 
     await message.answer(
-        "Мяу.",
-        reply_markup=cat_keyboard()
+        get_text(language, "start_existing"),
+        reply_markup=cat_keyboard(language)
     )
 
 
 @dp.callback_query(F.data == "feed")
 async def feed_cat(callback: CallbackQuery):
-    change_stat(callback.from_user.id, "hunger", 30)
+    user_id = callback.from_user.id
+    language = get_user_language(user_id)
 
-    replies = [
-        "*жрёт*",
-        "Ещё.",
-        "Нормально.",
-        "*утащил кусок куда-то*",
-        "Это всё?",
-    ]
+    change_stat(user_id, "hunger", 30)
+
+    replies = get_text(
+        language,
+        "feed_replies"
+    )
 
     await callback.message.answer(
         random.choice(replies),
-        reply_markup=cat_keyboard()
+        reply_markup=cat_keyboard(language)
     )
 
     await callback.answer()
@@ -85,18 +103,19 @@ async def feed_cat(callback: CallbackQuery):
 
 @dp.callback_query(F.data == "water")
 async def water_cat(callback: CallbackQuery):
-    change_stat(callback.from_user.id, "thirst", 40)
+    user_id = callback.from_user.id
+    language = get_user_language(user_id)
 
-    replies = [
-        "*пьёт*",
-        "*потрогал воду лапой*",
-        "Нормальная.",
-        "*пьёт из самого дальнего края миски*",
-    ]
+    change_stat(user_id, "thirst", 40)
+
+    replies = get_text(
+        language,
+        "water_replies"
+    )
 
     await callback.message.answer(
         random.choice(replies),
-        reply_markup=cat_keyboard()
+        reply_markup=cat_keyboard(language)
     )
 
     await callback.answer()
@@ -104,18 +123,19 @@ async def water_cat(callback: CallbackQuery):
 
 @dp.callback_query(F.data == "toilet")
 async def clean_toilet(callback: CallbackQuery):
-    change_stat(callback.from_user.id, "toilet", 100)
+    user_id = callback.from_user.id
+    language = get_user_language(user_id)
 
-    replies = [
-        "*немедленно полез в чистый лоток*",
-        "Наконец.",
-        "*проверил качество уборки*",
-        "Мяу.",
-    ]
+    change_stat(user_id, "toilet", 100)
+
+    replies = get_text(
+        language,
+        "toilet_replies"
+    )
 
     await callback.message.answer(
         random.choice(replies),
-        reply_markup=cat_keyboard()
+        reply_markup=cat_keyboard(language)
     )
 
     await callback.answer()
@@ -123,20 +143,19 @@ async def clean_toilet(callback: CallbackQuery):
 
 @dp.callback_query(F.data == "pet")
 async def pet_cat(callback: CallbackQuery):
-    change_stat(callback.from_user.id, "affection", 20)
+    user_id = callback.from_user.id
+    language = get_user_language(user_id)
 
-    replies = [
-        "*мурчит*",
-        "*подставил голову*",
-        "*кусь*",
-        "Ещё.",
-        "*потёрся мордой о руку*",
-        "*через три секунды передумал и ушёл*",
-    ]
+    change_stat(user_id, "affection", 20)
+
+    replies = get_text(
+        language,
+        "pet_replies"
+    )
 
     await callback.message.answer(
         random.choice(replies),
-        reply_markup=cat_keyboard()
+        reply_markup=cat_keyboard(language)
     )
 
     await callback.answer()
@@ -144,11 +163,14 @@ async def pet_cat(callback: CallbackQuery):
 
 @dp.callback_query(F.data == "status")
 async def show_status(callback: CallbackQuery):
-    cat = update_cat(callback.from_user.id)
+    user_id = callback.from_user.id
+    language = get_user_language(user_id)
+
+    cat = update_cat(user_id)
 
     await callback.message.answer(
-        status_text(cat),
-        reply_markup=cat_keyboard()
+        status_text(cat, language),
+        reply_markup=cat_keyboard(language)
     )
 
     await callback.answer()
@@ -187,14 +209,20 @@ async def users_info_command(message: Message):
 @dp.message(F.text)
 async def onboarding_message(message: Message):
     user_id = message.from_user.id
-    update_user_info(user_id, message.from_user.username, message.from_user.language_code)
+
+    update_user_info(
+        user_id,
+        message.from_user.username,
+        message.from_user.language_code
+    )
+
     cat = get_cat(user_id)
 
     if not cat:
         return
 
     state = cat["onboarding_state"]
-    language = cat["language"] or "en"
+    language = get_user_language(user_id)
 
     if state == "waiting_owner_name":
         owner_name = message.text.strip()

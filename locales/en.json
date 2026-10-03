@@ -33,5 +33,43 @@
   "*comes over and silently lies down beside you*",
   "*rubs its head against your hand*",
   "Do you even remember you have a cat?"
-]
+],
+"start_new": "🥚\n\n*crack*\n\nSomething small crawled out of the egg.\n\nIt looked at you.\n\nMeow.",
+"start_existing": "Meow.",
+"feed_replies": [
+  "*eats*",
+  "More.",
+  "Fine.",
+  "*drags a piece away somewhere*",
+  "That's it?"
+],
+"water_replies": [
+  "*drinks*",
+  "*touches the water with a paw*",
+  "Acceptable.",
+  "*drinks from the farthest edge of the bowl*"
+],
+"toilet_replies": [
+  "*immediately climbs into the clean litter box*",
+  "Finally.",
+  "*inspects the quality of your work*",
+  "Meow."
+],
+"pet_replies": [
+  "*purrs*",
+  "*pushes its head into your hand*",
+  "*bite*",
+  "More.",
+  "*rubs its face against your hand*",
+  "*changes its mind three seconds later and walks away*"
+],
+"button_feed": "🥩 Feed",
+"button_water": "💧 Water",
+"button_toilet": "🧹 Clean litter box",
+"button_pet": "🖐 Pet",
+"button_status": "📊 Status",
+"status_hunger": "Hunger",
+"status_water": "Water",
+"status_toilet": "Litter box",
+"status_affection": "Attention"
 }

@@ -187,3 +187,10 @@ def set_language(user_id: int, language: str):
         (language, user_id)
     )
     db.commit()
+
+
+def get_user(user_id: int):
+    return db.execute(
+        "SELECT * FROM users WHERE user_id = ?",
+        (user_id,)
+    ).fetchone()

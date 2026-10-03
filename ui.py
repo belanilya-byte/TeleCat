@@ -3,33 +3,35 @@ from aiogram.types import (
     InlineKeyboardMarkup,
 )
 
+from localization import get_text
 
-def cat_keyboard():
+
+def cat_keyboard(language: str):
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🥩 Покормить",
+                    text=get_text(language, "button_feed"),
                     callback_data="feed"
                 ),
                 InlineKeyboardButton(
-                    text="💧 Вода",
+                    text=get_text(language, "button_water"),
                     callback_data="water"
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="🧹 Убрать лоток",
+                    text=get_text(language, "button_toilet"),
                     callback_data="toilet"
                 ),
                 InlineKeyboardButton(
-                    text="🖐 Погладить",
+                    text=get_text(language, "button_pet"),
                     callback_data="pet"
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="📊 Состояние",
+                    text=get_text(language, "button_status"),
                     callback_data="status"
                 )
             ]
@@ -37,13 +39,13 @@ def cat_keyboard():
     )
 
 
-def status_text(cat):
+def status_text(cat, language: str):
     return (
         f"🐱 {cat['name']}\n\n"
-        f"🥩 Сытость: {cat['hunger']}/100\n"
-        f"💧 Вода: {cat['thirst']}/100\n"
-        f"🧹 Лоток: {cat['toilet']}/100\n"
-        f"❤️ Общение: {cat['affection']}/100"
+        f"🥩 {get_text(language, 'status_hunger')}: {cat['hunger']}/100\n"
+        f"💧 {get_text(language, 'status_water')}: {cat['thirst']}/100\n"
+        f"🧹 {get_text(language, 'status_toilet')}: {cat['toilet']}/100\n"
+        f"❤️ {get_text(language, 'status_affection')}: {cat['affection']}/100"
     )
 
 
