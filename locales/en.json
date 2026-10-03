@@ -1,0 +1,37 @@
+{
+  "ask_owner_name": "Are we just going to sit here in silence?\n\nWhat's your name?",
+  "ask_cat_name": "{owner_name}, huh.\n\nAnd what's my name?",
+  "onboarding_complete": "{cat_name}. Fine.",
+  "idle_replies": [
+    "*turns away demonstratively*",
+    "*pretends not to understand*",
+    "*grooms itself*",
+    "*flicks an ear*",
+    "*walks away*",
+    "{cat_name} is nowhere to be seen."
+  ],
+  "background_hungry": [
+  "The bowl is empty.",
+  "I checked. There's no food.",
+  "You forgot about the cat.",
+  "Meow.\n\nMeow.\n\nMEOW."
+],
+"background_thirsty": [
+  "Water.",
+  "There's something weird in the bowl. Give me fresh water.",
+  "*sits by the bowl and stares at you*"
+],
+"background_toilet": [
+  "Litter box.",
+  "Clean it.",
+  "*demonstratively scratches the floor next to the litter box*"
+],
+"background_lonely": [
+  "Missed you.",
+  "*sounds of demanding meowing*",
+  "*something presses against your hand, and you feel soft, warm fur*",
+  "*comes over and silently lies down beside you*",
+  "*rubs its head against your hand*",
+  "Do you even remember you have a cat?"
+]
+}
