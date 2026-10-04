@@ -1,9 +1,12 @@
+from datetime import timedelta
+
 from database import db, get_cat, now
 
 
 def update_cat(user_id: int):
     """
-    Показатели кота ухудшаются со временем.
+    Показатели кота ухудшаются за каждый полный прошедший час.
+    Неполный час сохраняется до следующего обновления.
     """
 
     cat = get_cat(user_id)
@@ -15,25 +18,18 @@ def update_cat(user_id: int):
 
     last_update = datetime.fromisoformat(cat["last_update"])
     elapsed = now() - last_update
-    hours = elapsed.total_seconds() / 3600
 
-    hunger_decay = int(hours * 5)
-    thirst_decay = int(hours * 7)
-    toilet_decay = int(hours * 4)
-    affection_decay = int(hours * 2)
+    full_hours = int(elapsed.total_seconds() // 3600)
 
-    if not any((
-        hunger_decay,
-        thirst_decay,
-        toilet_decay,
-        affection_decay
-    )):
+    if full_hours < 1:
         return cat
 
-    hunger = max(0, cat["hunger"] - hunger_decay)
-    thirst = max(0, cat["thirst"] - thirst_decay)
-    toilet = max(0, cat["toilet"] - toilet_decay)
-    affection = max(0, cat["affection"] - affection_decay)
+    hunger = max(0, cat["hunger"] - full_hours * 5)
+    thirst = max(0, cat["thirst"] - full_hours * 7)
+    toilet = max(0, cat["toilet"] - full_hours * 4)
+    affection = max(0, cat["affection"] - full_hours * 2)
+
+    new_last_update = last_update + timedelta(hours=full_hours)
 
     db.execute("""
         UPDATE cats
@@ -48,7 +44,7 @@ def update_cat(user_id: int):
         thirst,
         toilet,
         affection,
-        now().isoformat(),
+        new_last_update.isoformat(),
         user_id
     ))
 
