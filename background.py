@@ -2,6 +2,7 @@ import asyncio
 import random
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramForbiddenError
 
 from database import db, get_cat, set_onboarding_state
 from cat_logic import update_cat
@@ -25,20 +26,24 @@ async def start_onboarding(bot: Bot, user_id: int):
 
     language = user["language"] if user else None
 
-    if language is None:
+    try:
+        if language is None:
+            await bot.send_message(
+                user_id,
+                "Language / Язык / שפה",
+                reply_markup=language_keyboard()
+            )
+            return
+
         await bot.send_message(
             user_id,
-            "Language / Язык / שפה",
-            reply_markup=language_keyboard()
+            get_text(language, "ask_owner_name")
         )
+
+        set_onboarding_state(user_id, "waiting_owner_name")
+
+    except TelegramForbiddenError:
         return
-
-    await bot.send_message(
-        user_id,
-        get_text(language, "ask_owner_name")
-    )
-
-    set_onboarding_state(user_id, "waiting_owner_name")
 
 
 async def schedule_onboarding(bot: Bot):
@@ -54,6 +59,25 @@ async def schedule_onboarding(bot: Bot):
         asyncio.create_task(
             start_onboarding(bot, user["user_id"])
         )
+
+
+async def send_background_message(
+    bot: Bot,
+    user_id: int,
+    language: str,
+    key: str
+):
+    try:
+        replies = get_text(language, key)
+
+        await bot.send_message(
+            user_id,
+            random.choice(replies),
+            reply_markup=cat_keyboard()
+        )
+
+    except TelegramForbiddenError:
+        return
 
 
 async def cat_background_loop(bot: Bot):
@@ -82,64 +106,44 @@ async def cat_background_loop(bot: Bot):
 
             if cat["hunger"] <= 25:
                 if random.random() < 0.15:
-                    try:
-                        replies = get_text(
-                            language,
-                            "background_hungry"
-                        )
-
-                        await bot.send_message(
-                            user_id,
-                            random.choice(replies),
-                            reply_markup=cat_keyboard()
-                        )
-                    except Exception:
-                        pass
+                    await send_background_message(
+                        bot,
+                        user_id,
+                        language,
+                        "background_hungry"
+                    )
 
             elif cat["thirst"] <= 25:
                 if random.random() < 0.15:
-                    try:
-                        replies = get_text(
-                            language,
-                            "background_thirsty"
-                        )
-
-                        await bot.send_message(
-                            user_id,
-                            random.choice(replies),
-                            reply_markup=cat_keyboard()
-                        )
-                    except Exception:
-                        pass
+                    await send_background_message(
+                        bot,
+                        user_id,
+                        language,
+                        "background_thirsty"
+                    )
 
             elif cat["toilet"] <= 20:
                 if random.random() < 0.15:
-                    try:
-                        replies = get_text(
-                            language,
-                            "background_toilet"
-                        )
-
-                        await bot.send_message(
-                            user_id,
-                            random.choice(replies),
-                            reply_markup=cat_keyboard()
-                        )
-                    except Exception:
-                        pass
+                    await send_background_message(
+                        bot,
+                        user_id,
+                        language,
+                        "background_toilet"
+                    )
 
             elif cat["affection"] <= 25:
                 if random.random() < 0.15:
-                    try:
-                        replies = get_text(
-                            language,
-                            "background_lonely"
-                        )
+                    await send_background_message(
+                        bot,
+                        user_id,
+                        language,
+                        "background_lonely"
+                    )
 
-                        await bot.send_message(
-                            user_id,
-                            random.choice(replies),
-                            reply_markup=cat_keyboard()
-                        )
-                    except Exception:
-                        pass
+            elif random.random() < 0.01:
+                await send_background_message(
+                    bot,
+                    user_id,
+                    language,
+                    "background_random"
+                )
