@@ -1,5 +1,7 @@
 # 🐱 TeleCat
 
+@TeleKoshkaBot
+
 **TeleCat** is a persistent virtual pet that lives inside Telegram.
 
 The project started as a simple Tamagotchi-style bot and is being developed toward a personalized virtual creature with autonomous behavior, memory and personality.
