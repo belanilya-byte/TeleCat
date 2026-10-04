@@ -63,6 +63,12 @@
   "*rubs its face against your hand*",
   "*changes its mind three seconds later and walks away*"
 ],
+"background_random": [
+    "Meow.",
+    "*came to see what you're doing*",
+    "*walked past*",
+    "*sat down nearby*"
+],
 "button_feed": "🥩 Feed",
 "button_water": "💧 Water",
 "button_toilet": "🧹 Clean litter box",
