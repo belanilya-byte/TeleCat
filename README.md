@@ -1,6 +1,6 @@
 # 🐱 TeleCat
 
-@TeleKoshkaBot
+t.me/TeleKoshkaBot
 
 **TeleCat** is a persistent virtual pet that lives inside Telegram.
 
