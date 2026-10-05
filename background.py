@@ -73,7 +73,7 @@ async def send_background_message(
         await bot.send_message(
             user_id,
             random.choice(replies),
-            reply_markup=cat_keyboard()
+            reply_markup=cat_keyboard(language)
         )
 
     except TelegramForbiddenError:
